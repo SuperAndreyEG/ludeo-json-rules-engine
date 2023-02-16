@@ -100,6 +100,15 @@ export default class Condition {
       .then(rightHandSideValue => {
         return almanac.factValue(this.fact, this.params, this.path)
           .then(leftHandSideValue => {
+            if (typeof this.factModifier === 'function') {
+              const state = almanac.getState();
+              const stateValue = state[this.fact];
+              if (stateValue !== undefined) {
+                const newValue = this.factModifier(stateValue, leftHandSideValue);
+                state[this.fact] = newValue;
+                leftHandSideValue = newValue;
+              }
+            }
             const result = op.evaluate(leftHandSideValue, rightHandSideValue)
             debug(`condition::evaluate <${JSON.stringify(leftHandSideValue)} ${this.operator} ${JSON.stringify(rightHandSideValue)}?> (${result})`)
             return { result, leftHandSideValue, rightHandSideValue, operator: this.operator }

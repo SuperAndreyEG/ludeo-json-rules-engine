@@ -228,18 +228,19 @@ class Engine extends EventEmitter {
 
   /**
    * Runs the rules engine
+   * @param  {Object} state - current state
    * @param  {Object} runtimeFacts - fact values known at runtime
    * @param  {Object} runOptions - run options
    * @return {Promise} resolves when the engine has completed running
    */
-  run (runtimeFacts = {}) {
+  run (runtimeFacts = {}, state = {}) {
     debug('engine::run started')
     this.status = RUNNING
     const almanacOptions = {
       allowUndefinedFacts: this.allowUndefinedFacts,
       pathResolver: this.pathResolver
     }
-    const almanac = new Almanac(this.facts, runtimeFacts, almanacOptions)
+    const almanac = new Almanac(this.facts, runtimeFacts, almanacOptions, state)
     const orderedSets = this.prioritizeRules()
     let cursor = Promise.resolve()
     // for each rule set, evaluate in parallel,
@@ -266,7 +267,8 @@ class Engine extends EventEmitter {
           results,
           failureResults,
           events: almanac.getEvents('success'),
-          failureEvents: almanac.getEvents('failure')
+          failureEvents: almanac.getEvents('failure'),
+          state: almanac.getState(),
         })
       }).catch(reject)
     })
