@@ -152,6 +152,7 @@ interface ConditionProperties {
   path?: string;
   priority?: number;
   params?: Record<string, any>;
+  factModifier?: (any, any?) => any;
 }
 
 type NestedCondition = ConditionProperties | TopLevelCondition;
