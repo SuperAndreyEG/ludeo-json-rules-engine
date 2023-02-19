@@ -9,6 +9,7 @@ export interface EngineResult {
   almanac: Almanac;
   results: RuleResult[];
   failureResults: RuleResult[];
+  state: Record<string, any>;
 }
 
 export default function engineFactory(
