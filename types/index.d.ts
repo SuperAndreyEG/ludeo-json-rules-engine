@@ -43,7 +43,7 @@ export class Engine {
   on(eventName: "failure", handler: EventHandler): this;
   on(eventName: string, handler: EventHandler): this;
 
-  run(facts?: Record<string, any>): Promise<EngineResult>;
+  run(facts?: Record<string, any>, initialState?: Record<string, any>): Promise<EngineResult>;
   stop(): this;
 }
 
